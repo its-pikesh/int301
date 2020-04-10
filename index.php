@@ -1,4 +1,3 @@
-
 <?php
   $server="localhost";
   $username= "root";
@@ -13,7 +12,7 @@ if (!$conn) {
 }
   //echo "Connected successfully";
 $resultset = $conn->query("SELECT movie_name from detail");
-
+$result = $conn->query("SELECT movie_name, rating from detail");
 ?>
 
 
@@ -51,12 +50,9 @@ $resultset = $conn->query("SELECT movie_name from detail");
           ?>
       </div>
     </div>
-    
-    <button class="form__submit-button" type="button">Submit</button>
 </div>
 <div>
   </form>
-  <br>
   <div>
     <form class="star_form">
       <fieldset>
@@ -71,10 +67,40 @@ $resultset = $conn->query("SELECT movie_name from detail");
       </fieldset>
     </form>
   </div>
-
 </div>
 
+<div class="star_form">
+     <button class="form__submit-button" type="button">Submit</button>
+</div>
+<div>
+ <div class="table-title">
+</div>
+<br>
+<table class="table-fill">
+  <thead>
+    <tr>
+      <th class="text-left">Movie Name</th>
+      <th class="text-left">Average Rating</th>
+    </tr>
+  </thead>
 
+  <tbody class="table-hover">
+   <?php
+            while($rows = $result->fetch_assoc())
+            {
+              $movie_name=$rows['movie_name'];
+              $rating = $rows['rating']; 
+               echo "<tr>
+                       <td class='text-left'>$movie_name</td>
+                       <td class='text-left'>$rating</td>
+                     </tr>";
+            }
+     ?>
+</tbody>
+</table>
+  
+
+</div>
 <!-- partial -->
   <script  src="./script.js"></script>
   <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script><script  src="./script.js"></script>-->
