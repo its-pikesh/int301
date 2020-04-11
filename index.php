@@ -41,6 +41,8 @@ div.stars {
 }
 h2,h4{
   text-align: center;
+  color: cornsilk;
+  font-weight: 700;
 }
 input.star { display: none; }
 
