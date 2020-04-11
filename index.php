@@ -31,11 +31,15 @@ $result = $conn->query("SELECT movie_name, rating from detail");
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <style>
+
+body {
+  background: #525252cf;
+}
 div.stars {
   width: 270px;
   display: inline-block;
 }
-
+abc
 input.star { display: none; }
 
 label.star {
