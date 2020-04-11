@@ -39,7 +39,7 @@ div.stars {
   width: 270px;
   display: inline-block;
 }
-abc
+
 input.star { display: none; }
 
 label.star {
