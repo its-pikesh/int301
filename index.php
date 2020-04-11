@@ -1,112 +1,140 @@
 <?php
   $server="localhost";
   $username= "root";
-  $password = "";
+  $password = "root";
   $db_name="movierating";
 
   $conn= NEW mysqli($server, $username, $password, $db_name);
 
   // Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-  //echo "Connected successfully";
+  if (!$conn) {
+      die("Connection failed: " . mysqli_connect_error());
+  }
+  
+  if (isset($_POST["submit"])) {
+    $movie_name = $_POST["movie"];
+    $rating = $_POST["star"];
+    $curdata = $conn->query("SELECT rating,times_rated from detail WHERE movie_name = '$movie_name' LIMIT 1");
+    $curdata = $curdata->fetch_assoc();
+    $currating = $curdata["rating"];
+    $timesrated = $curdata["times_rated"] + 1;
+    $newrating = ($currating + $rating) / 2;
+    $currating = $conn->query("UPDATE detail SET rating = '$newrating', times_rated = '$timesrated' WHERE movie_name = '$movie_name'");
+  }
 $resultset = $conn->query("SELECT movie_name from detail");
 $result = $conn->query("SELECT movie_name, rating from detail");
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en" >
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Movie rating system</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel="stylesheet" href="./style.css">
-<link rel="stylesheet" href="./style1.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="style.css">
 
+<style>
+div.stars {
+  width: 270px;
+  display: inline-block;
+}
+
+input.star { display: none; }
+
+label.star {
+  float: right;
+  padding: 10px;
+  font-size: 36px;
+  color: #444;
+  transition: all .2s;
+}
+
+input.star:checked ~ label.star:before {
+  content: '\f005';
+  color: #FD4;
+  transition: all .25s;
+}
+
+input.star-5:checked ~ label.star:before {
+  color: #FE7;
+  text-shadow: 0 0 20px #952;
+}
+
+input.star-1:checked ~ label.star:before { color: #F62; }
+
+label.star:hover { transform: rotate(-15deg) scale(1.3); }
+
+label.star:before {
+  content: '\f006';
+  font-family: FontAwesome;
+}
+</style>
 </head>
 <body>
-
-
-<!-- partial:index.partial.html -->
-<div class="container">
-  <form class="form">
-    <div class="selectbox selectbox--unselect" data-option="">
-      <div class="selectbox__displayWord">
-        -- Select --
-      </div>
-      <div class="option-container">
-       <?php
-            while($rows = $resultset->fetch_assoc())
-            {
-              $movie_name=$rows['movie_name'];
-              //echo "<option value='$movie_name'>$movie_name</option>";
-               echo "<div class='option-container__option'>
-                        <input type='radio' class='option__radio' id='$movie_name' name='category'>
-                        <label class='option__label' for='$movie_name' data-value='$movie_name'>$movie_name</label>
-                    </div>";
-            }
-          ?>
-      </div>
+  <div class="container">
+    <div class="col-md-12 mt-5">
+      <form action="" method="POST">
+        <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <select class="form-control form-control-lg" name="movie">
+              <?php
+                while($rows = $resultset->fetch_assoc())
+                {
+                  $movie_name=$rows['movie_name'];
+              ?>
+                <option><?php echo $movie_name; ?></option>
+              <?php } ?>
+            </select>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4 ml-4">
+            <div class="stars">
+              <input class="star star-5" id="star-5" type="radio" value="5" name="star"/>
+              <label class="star star-5" for="star-5"></label>
+              <input class="star star-4" id="star-4" type="radio" value="4" name="star"/>
+              <label class="star star-4" for="star-4"></label>
+              <input class="star star-3" id="star-3" type="radio" value="3" name="star"/>
+              <label class="star star-3" for="star-3"></label>
+              <input class="star star-2" id="star-2" type="radio" value="2" name="star"/>
+              <label class="star star-2" for="star-2"></label>
+              <input class="star star-1" id="star-1" type="radio" value="1" name="star"/>
+              <label class="star star-1" for="star-1"></label>
+            </div>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-dark btn-lg btn-block" name="submit">Submit</button>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
+      </form>
     </div>
-</div>
-<div>
-  </form>
-  <div>
-    <form class="star_form">
-      <fieldset>
-        <span class="star-cb-group">
-          <input type="radio" id="rating-5" name="rating" value="5" /><label for="rating-5">5</label>
-          <input type="radio" id="rating-4" name="rating" value="4" /><label for="rating-4">4</label>
-          <input type="radio" id="rating-3" name="rating" value="3" /><label for="rating-3">3</label>
-          <input type="radio" id="rating-2" name="rating" value="2" /><label for="rating-2">2</label>
-          <input type="radio" id="rating-1" name="rating" value="1" /><label for="rating-1">1</label>
-          <input type="radio" id="rating-0" name="rating" value="0" class="star-cb-clear" /><label for="rating-0">0</label>
-        </span>
-      </fieldset>
-    </form>
-  </div>
-</div>
-
-<div class="star_form">
-     <button class="form__submit-button" type="button">Submit</button>
-</div>
-<div>
- <div class="table-title">
-</div>
-<br>
-<table class="table-fill">
-  <thead>
-    <tr>
-      <th class="text-left">Movie Name</th>
-      <th class="text-left">Average Rating</th>
-    </tr>
-  </thead>
-
-  <tbody class="table-hover">
-   <?php
+    <div class="col-md-12 mt-5">
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Movie Name</th>
+            <th scope="col">Average Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
             while($rows = $result->fetch_assoc())
             {
               $movie_name=$rows['movie_name'];
-              $rating = $rows['rating']; 
-               echo "<tr>
-                       <td class='text-left'>$movie_name</td>
-                       <td class='text-left'>$rating</td>
-                     </tr>";
-            }
-     ?>
-</tbody>
-</table>
-  
-
-</div>
-<!-- partial -->
-  <script  src="./script.js"></script>
-  <!--<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script><script  src="./script.js"></script>-->
-  <script  src="./script1.js"></script>
-
-
-
+              $rating = $rows['rating'];
+          ?>
+          <tr>
+            <td><?php echo $movie_name; ?></td>
+            <td><?php echo number_format($rating,2,'.',''); ?></td>
+          </tr>
+            <?php } ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
 </html>
