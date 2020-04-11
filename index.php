@@ -32,14 +32,16 @@ $result = $conn->query("SELECT movie_name, rating from detail");
 
 <style>
 
-body {
+body{
   background: #525252cf;
 }
 div.stars {
   width: 270px;
   display: inline-block;
 }
-
+h2,h4{
+  text-align: center;
+}
 input.star { display: none; }
 
 label.star {
@@ -73,6 +75,10 @@ label.star:before {
 </head>
 <body>
   <div class="container">
+    <div class="col-md-12 mt-5">
+      <h2>MOVIE RATING SYSTEM</h2><br>
+      <h4>Select and rate the movie</h4>
+    </div>
     <div class="col-md-12 mt-5">
       <form action="" method="POST">
         <div class="row">
