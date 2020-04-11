@@ -99,7 +99,7 @@ label.star:before {
           <div class="col-md-4"></div>
           <div class="col-md-4 ml-4">
             <div class="stars">
-              <input class="star star-5" id="star-5" type="radio" value="5" name="star"/>
+              <input class="star star-5" id="star-5" type="radio" value="5" name="star" required="" />
               <label class="star star-5" for="star-5"></label>
               <input class="star star-4" id="star-4" type="radio" value="4" name="star"/>
               <label class="star star-4" for="star-4"></label>
